@@ -1,0 +1,806 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BIOS101 Concept Question — Student Response & Oral Check</title>
+  <style>
+    :root{
+      --bg:#f8fafc;
+      --card:#ffffff;
+      --muted:#6b7280;
+      --accent:#0f172a;
+      --danger:#ef4444;
+      --success:#16a34a;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
+    }
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial; background:var(--bg); color:var(--accent);}
+    .container{max-width:900px;margin:28px auto;padding:20px;}
+    .card{background:var(--card);border-radius:12px;padding:18px;box-shadow:0 6px 18px rgba(15,23,42,0.06);}
+    h1{margin:0 0 10px;font-size:20px;}
+    p.lead{margin:0 0 18px;color:var(--muted);}
+    label{display:block;margin:12px 0 6px;font-weight:600;}
+    textarea{
+      width:100%;min-height:160px;padding:12px;border-radius:8px;border:1px solid #e6edf3;resize:vertical;
+      font-size:15px;line-height:1.5;background:linear-gradient(transparent,transparent);
+    }
+    .controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+    button{background:#0b5fff;color:#fff;padding:8px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:600;}
+    button.ghost{background:#eef2ff;color:#0b5fff;border:1px solid #dbeafe;}
+    button.danger{background:var(--danger);}
+    small.note{display:block;color:var(--muted);margin-top:6px;}
+    .row{display:flex;gap:14px;align-items:flex-start;}
+    .col{flex:1;}
+    .panel{padding:12px;border-radius:8px;border:1px solid #eef2f6;background:#fbfdff;}
+    .question-box{display:flex;gap:10px;align-items:center;}
+    input[type="text"]{flex:1;padding:10px;border-radius:8px;border:1px solid #e6edf3;font-size:14px;}
+    .meter{height:8px;background:#e6eef8;border-radius:8px;overflow:hidden;margin-top:8px;}
+    .meter > i{display:block;height:100%;width:0;background:linear-gradient(90deg,#60a5fa,#2563eb);transition:width 0.15s linear;}
+    .audio-controls{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap;}
+    .countdown{font-weight:700;color:var(--muted);}
+    .download-links{margin-top:12px;padding-top:12px;border-top:1px dashed #edf2f7;}
+    .danger-note{color:var(--danger);font-weight:600;}
+    .success-note{color:var(--success);font-weight:700;}
+    .hint{font-size:13px;color:var(--muted);}
+    footer{margin-top:18px;font-size:13px;color:var(--muted);text-align:center;}
+    /* prevent text selection in header/labels 
+ but allow in textarea */
+    .no-select{user-select:none;-webkit-user-select:none;-ms-user-select:none;}
+
+    /* --- NEW STYLES: Concept Question and Video/Modal --- */
+    #concept-question {
+        background: #eef2ff;
+        border: 1px solid #dbeafe;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    #concept-question h2 {
+        font-size: 18px;
+        color: var(--accent);
+        margin-top: 0;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #dbeafe;
+        padding-bottom: 5px;
+    }
+    #concept-question article p {
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+        line-height: 1.4;
+    }
+    .media-toggle {
+        margin-bottom: 10px;
+        display: inline-flex;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #dbeafe;
+        align-items: center;
+    }
+    .media-toggle button {
+        background: transparent;
+        color: #0b5fff;
+        padding: 8px 12px;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        margin: 0;
+        border-radius: 0;
+    }
+    .media-toggle button.active {
+        background: #0b5fff;
+        color: #fff;
+    }
+    #preview {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin-top: 10px;
+        border: 1px solid #e6edf3;
+        background: #000;
+        max-height: 250px; /* Limit video preview size */
+    }
+    /* Modal for clipboard blocking */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+    .modal-content {
+        background: var(--card);
+        padding: 25px;
+        border-radius: 12px;
+        max-width: 400px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(15,23,42,0.2);
+    }
+    .modal-content h3 {
+        color: var(--danger);
+        margin-top: 0;
+    }
+    .modal-content button {
+        margin-top: 15px;
+    }
+    .clipboard-note {
+        display: inline-block;
+    }
+  </style>
+</head>
+<body>
+  <div id="clipboardModal" class="modal-overlay">
+    <div class="modal-content">
+      <h3>Academic Integrity Reminder</h3>
+      <p>It looks like you tried to paste content multiple times. To encourage **original work**, copy/paste is disabled for this assignment.</p>
+      <p>Please write your response in your **own words**.</p>
+      <button id="closeModal">I understand</button>
+    </div>
+  </div>
+  <div class="container">
+    <div class="card">
+      <h1>BIOS 101 — Concept Question 2 — Student Submission</h1>
+      <p class="lead">Type or speak your half-page response below.
+ Copy/paste and cut are disabled. After submitting, use <strong>Pluck Question</strong> to create a short oral-check question (editable), then record a 1–2 minute answer to that question.</p>
+
+      <section id="concept-question">
+        <h2>BIOS 101 Concept Question 2</h2>
+        <p><strong>5 points</strong></p>
+        <article>
+          <p>A powerful and impactful method to genetically modifying organisms, including humans along with agricultural plants, has recently been developed called CRISPR and often referred to as “gene editing”. It is a technology that makes it possible to “cure” genetic diseases such as cystic fibrosis, sickle cell anemia, and others in individuals. It might also be used to correct the genetic mutation in the zygote so that those diseases are completely eliminated in humans and a thing of the past.</p>
+          <p>However, as much good as this might have, there are concerns about how and if CRISPR gene editing should be used for human genetic modification.</p>
+          <p>The assignment is for you to do some investigative research into CRISPR gene editing in humans and address the questions below, typed, not hand written, making sure to cite the full reference for your source(s). Be sure to use full sentences and paragraph in your response of about a half page (maximum), 12 point font.</p>
+          <ul>
+            <li>Explain what CRISPR gene editing can be used to do DNA in organisms such as humans or other eukaryotes?</li>
+            <li>What are some of the positive applications that CRISPR gene editing could be used to help people or the environment?</li>
+            <li>What are some of the concerns and possible challenges for the use of CRISPR gene editing technology?</li>
+            <li>How will Artificial Intelligence affect implementation of this technology?</li>
+          </ul>
+          <p>Note, this is an individual writing assignment, not a project done as a “group” or with other students. Be sure to write it in your own words and not copy/pasting sentences/sections from other sources (online or hard copy). You must use full sentences and paragraphs using formal writing.</p>
+          <p>If you need a starting point for reliable information about CRISPR gene editing, here is a link to a reasonable perspective on CRISPR/Cas9 gene editing in humans. It is always best to look at more than just one reliable source of information: https://innovativegenomics.org/news/crispr-clinical-trials-2025/Links to an external site.</p>
+        </article>
+      </section>
+      <label for="response">Your typed response (max ~300–400 words)</label>
+      <textarea id="response" placeholder="Type your half-page CRISPR response here..." maxlength="4000" aria-label="Your response to the concept question"></textarea>
+      
+      <small class="hint">
+        <span class="clipboard-note">Copy / paste / cut / right-click are disabled to encourage original work.</span>
+        <button id="submitBtn" aria-label="Submit Response (Alt+S)">💾 Submit Response</button>
+      </small>
+
+      <div class="controls" style="margin-top:10px;">
+        <button id="enableSpeech" class="ghost" aria-label="Start Speech to Text">🎙️ Speak (speech-to-text)</button>
+        <button 
+ id="stopSpeech" class="ghost" disabled aria-label="Stop Speech to Text">⏹ Stop</button>
+        <button id="pluckBtn" class="ghost" aria-label="Pluck Question">🔎 Pluck Question</button>
+        <button id="clearBtn" class="ghost" aria-label="Clear Response">Clear</button>
+        <button id="exportText" class="ghost" aria-label="Download Typed Response">💾 Download Response</button>
+      </div>
+
+      <div style="height:14px;"></div>
+
+      <div class="row">
+        <div class="col">
+          <div class="panel">
+            <label for="pluckedQuestion">Plucked question (editable)</label>
+        
+         <div class="question-box">
+              <input type="text" id="pluckedQuestion" placeholder="No question plucked yet — click 'Pluck Question'" aria-label="Plucked Question">
+              <button id="editExample" class="ghost" aria-label="Edit Plucked Question">✏️ Edit</button>
+            </div>
+            <small class="hint">The system suggests a short question derived from your response;
+ please review and edit if needed before recording.</small>
+          </div>
+
+          <div style="height:12px;"></div>
+
+          <div class="panel">
+            <label>Oral Check — 1–2 minute recording</label>
+            
+            <div class="media-toggle">
+              <button id="toggleAudio" class="active" aria-label="Select Audio Recording Mode">Audio</button>
+              <button id="toggleVideo" aria-label="Select Video Recording Mode">Video</button>
+            </div>
+            <video id="preview" autoplay muted playsinline style="display:none;" aria-label="Video Preview"></video>
+            <div class="audio-controls">
+              <button id="recordBtn" aria-label="Start Recording (Alt+R)">● Start Recording</button>
+              
+ <button id="stopRecBtn" disabled aria-label="Stop Recording (Alt+R)">■ Stop</button>
+              <div class="countdown" id="timer">00:00</div>
+            </div>
+            <div class="meter" aria-hidden><i id="meterBar"></i></div>
+            <small class="hint">Recording limit: 120 seconds.
+ Recording will stop automatically at the limit.</small>
+
+            <div id="playerArea" style="margin-top:12px;display:none;">
+              <audio id="audioPlayer" controls aria-label="Recorded Audio"></audio>
+              <div style="margin-top:8px;">
+                <button id="downloadAudio" class="ghost" aria-label="Download Recording">⬇️ Download Recording</button>
+                <button id="reRecord" class="ghost" aria-label="Re-record">🔁 Re-record</button>
+          
+              </div>
+            </div>
+
+            <div class="download-links" id="exportArea" style="display:none;">
+              <p><strong>Save copies:</strong></p>
+              <a id="downloadResponseLink" class="ghost" download="response.txt" href="#" aria-label="Download typed response file">Download typed response</a>
+              <a id="downloadAudioLink" class="ghost" download="response-audio.webm" href="#" aria-label="Download audio/video recording file">Download audio (if recorded)</a>
+             
+              <div style="margin-top:8px;">
+                <button id="packageBtn" class="ghost" aria-label="Prepare Single Download Package">📦 Prepare single download (response + audio)</button>
+                <a id="packageLink" style="display:none;margin-left:8px;" aria-label="Download package file">⬇️ Download package</a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div style="width:18px"></div>
+
+ 
+         <div style="width:310px;">
+          <div class="panel no-select">
+            <strong>Instructor / TA</strong>
+            <p class="hint">Use the plucked question to check that the student can explain their own writing.
+ The download includes both the typed response and the audio answer for easy grading and archival.</p>
+            <hr />
+            <p><strong>Warnings / notes</strong></p>
+            <ul style="padding-left:18px;color:var(--muted)">
+              <li>Clipboard blocking deters casual copy/paste but cannot absolutely prevent all copying.</li>
+              <li>Recording requires microphone permissions and a secure 
+ context (HTTPS or localhost).</li>
+              <li id="privacyNote">Recording requires camera/mic permissions and a secure context (HTTPS or localhost).</li>
+              <li>Speech-to-text requires browser support (Chrome recommended).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <footer>BIOS 101 — Instructor Tools • Local-only client page • No server required</footer>
+    </div>
+  </div>
+
+  <script>
+    // --- ORIGINAL: Utility: copy/paste/cut/blocking ---
+    let pasteAttemptCount = 0;
+    const MAX_PASTE_ATTEMPTS = 3;
+    const clipboardModal = document.getElementById('clipboardModal');
+    document.getElementById('closeModal').addEventListener('click', () => {
+        clipboardModal.style.display = 'none';
+        pasteAttemptCount = 0; // Reset after closing
+    });
+
+    (function blockClipboardAndContext() {
+  
+      const ta = document.getElementById('response');
+
+      function block(e) {
+        e.preventDefault();
+        
+        // --- NEW FEATURE: Clipboard Blocking Progressive Disclosure ---
+        if (e.type === 'paste') {
+            pasteAttemptCount++;
+            if (pasteAttemptCount > MAX_PASTE_ATTEMPTS) {
+                clipboardModal.style.display = 'flex';
+            }
+        }
+        // --- END NEW FEATURE ---
+        
+        return false;
+      }
+
+      // Block paste/cut/copy
+      ['paste','cut','copy'].forEach(evt => {
+        ta.addEventListener(evt, block);
+      });
+
+      // Block context menu on textarea (right-click)
+      ta.addEventListener('contextmenu', block);
+      // Block drag & drop into textarea
+      ta.addEventListener('drop', block);
+      // Block common keyboard shortcuts for copy/paste/cut
+      document.addEventListener('keydown', (e) => {
+        // ctrl/cmd + C/V/X/A
+        if ((e.ctrlKey || e.metaKey) && ['c','v','x'].includes(e.key.toLowerCase())) {
+          e.preventDefault();
+          // --- NEW FEATURE: Keyboard Paste Block Counter ---
+          if (e.key.toLowerCase() === 'v') {
+              pasteAttemptCount++;
+              if (pasteAttemptCount > MAX_PASTE_ATTEMPTS) {
+                  clipboardModal.style.display = 'flex';
+              }
+          }
+          // --- END NEW FEATURE ---
+        }
+        // Block Ctrl+Insert, Shift+Insert typical paste combos
+        if ((e.shiftKey && e.key === 'Insert') || (e.key === 'Insert' && e.ctrlKey)) {
+        
+          e.preventDefault();
+        }
+        
+        // --- NEW FEATURE: Keyboard Shortcuts (Alt+S, Alt+R) ---
+        if (e.altKey) {
+            if (e.key.toLowerCase() === 's' && document.getElementById('submitBtn')) {
+                e.preventDefault();
+                document.getElementById('submitBtn').click();
+            } else if (e.key.toLowerCase() === 'r') {
+                e.preventDefault();
+                if (recordBtn.disabled === false) {
+                    startRecording();
+                } else if (stopRecBtn.disabled === false) {
+                    stopRecording();
+                }
+            }
+        }
+        // --- END NEW FEATURE ---
+      });
+      // Also block selection via double-click? No, allow selection so students can edit their text.
+      // But visually discourage copying by not allowing CTRL-based copy.
+    })();
+    // --- ORIGINAL: Speech-to-text (optional) ---
+    let recognition, recognizing = false;
+    const enableSpeechBtn = document.getElementById('enableSpeech');
+    const stopSpeechBtn = document.getElementById('stopSpeech');
+    const responseTA = document.getElementById('response');
+
+    function supportsSpeech() {
+      return ('webkitSpeechRecognition' in window) ||
+ ('SpeechRecognition' in window);
+    }
+
+    enableSpeechBtn.addEventListener('click', () => {
+      if (!supportsSpeech()) {
+        alert('Speech-to-text not supported by this browser. Chrome has the best support.');
+        return;
+      }
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.interimResults = true;
+      recognition.maxAlternatives = 1;
+      
+      recognition.continuous = true;
+      recognition.onstart = () => { recognizing = true; enableSpeechBtn.disabled = true; stopSpeechBtn.disabled = false; enableSpeechBtn.textContent = '🎙️ Recording...'; };
+      recognition.onerror = (e) => { console.error('Speech error', e); };
+      recognition.onresult = (evt) => {
+        let interim = '';
+        let final = responseTA.value;
+        for (let i = evt.resultIndex; i < evt.results.length; ++i) {
+          const 
+ transcript = evt.results[i][0].transcript;
+          if (evt.results[i].isFinal) final += (final ?
+ ' ' : '') + transcript;
+          else interim += transcript;
+          }
+        responseTA.value = final + (interim ? ' ' + interim : '');
+      };
+      // --- REFINEMENT: Ensure buttons reset on end/error ---
+      const resetSpeech = () => {
+          recognizing = false;
+          enableSpeechBtn.disabled = false;
+          stopSpeechBtn.disabled = true;
+          enableSpeechBtn.textContent = '🎙️ Speak (speech-to-text)';
+      };
+      recognition.onend = resetSpeech;
+      recognition.onerror = (e) => { 
+          console.error('Speech error', e); 
+          resetSpeech(); // Reset controls on error
+          if (e.error === 'not-allowed') {
+              alert('Microphone access denied. Please check your browser permissions.');
+          }
+      };
+      // --- END REFINEMENT ---
+      recognition.start();
+    });
+
+    stopSpeechBtn.addEventListener('click', () => {
+      if (recognition && recognizing) recognition.stop();
+    });
+    // --- ORIGINAL: Pluck Question heuristic ---
+    const pluckBtn = document.getElementById('pluckBtn');
+    const pluckedInput = document.getElementById('pluckedQuestion');
+    function sentenceSplit(text) {
+      // Split into sentences with a simple regex;
+      // keep abbreviations handling out for brevity.
+      return text.split(/(?<=[.?!])\s+(?=[A-Z0-9"“])/g).map(s => s.trim()).filter(Boolean);
+    }
+
+    function makeQuestionFromSentence(sent) {
+      // If sentence already contains a question mark, return it with minor cleanup
+      if (!sent) return '';
+      if (sent.includes('?')) return sent;
+      // Heuristic: convert a declarative sentence into a short question
+      // Try to find "You said X" patterns, or "I mentioned X" etc.
+      let q = sent;
+      // Remove trailing period
+      q = q.replace(/\.$/, '');
+      // Shorten if very long:
+      const words = q.split(/\s+/);
+      if (words.length > 30) {
+        q = words.slice(0, 25).join(' ') + '...';
+      }
+      // Prepend a prompt:
+      q = 'In your own words, explain: "' + q + '"';
+      return q;
+    }
+
+    pluckBtn.addEventListener('click', () => {
+      const text = responseTA.value.trim();
+      if (!text) {
+        alert('Please type or speak your response first, then click Pluck Question.');
+        return;
+      }
+      const sents = sentenceSplit(text);
+      // prefer sentences containing "said", "wrote", "mentioned", "stated", "you"
+      let candidate = sents.find(s => /\b(said|wrote|mentioned|stated|you|your)\b/i);
+      // else 
+      // prefer the longest sentence (likely explanatory)
+      if (!candidate && sents.length) {
+        candidate = sents.reduce((a,b) => (b.length > a.length ? b : a), sents[0]);
+      }
+      const question = makeQuestionFromSentence(candidate || sents[0] || text.split('.').slice(0,1)[0]);
+      pluckedInput.value = question;
+      pluckedInput.focus();
+      document.getElementById('pluckBtn').textContent = '🔎 Plucked';
+      // Show export area
+      document.getElementById('exportArea').style.display = 'block';
+    });
+    // allow manual edit
+    document.getElementById('editExample').addEventListener('click', () => {
+      pluckedInput.focus();
+    });
+
+    // --- NEW FEATURE: Submit Button Logic ---
+    const submitBtn = document.getElementById('submitBtn');
+
+    function validateAndSubmit() {
+        const text = responseTA.value.trim();
+        const wordCount = text.split(/\s+/).filter(Boolean).length;
+        const MIN_WORDS = 300;
+        const MAX_WORDS = 400;
+
+        if (!text) {
+            alert('Your response is empty. Please type or speak your half-page response.');
+            return;
+        }
+
+        if (wordCount < MIN_WORDS || wordCount > MAX_WORDS) {
+            alert(`Word count is ${wordCount}. Please ensure your response is between ${MIN_WORDS} and ${MAX_WORDS} words.`);
+            return;
+        }
+
+        if (!pluckedInput.value.trim()) {
+            if (!confirm("The oral check question is empty. Are you sure you want to submit without a question for the oral check?")) return;
+        }
+
+        // 1. Create blob and trigger download (like exportText)
+        const blob = new Blob([text], {type:'text/plain'});
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'bios101_response.txt'; // Specific filename for submission
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+
+        // 2. Set submittedAt timestamp in localStorage
+        localStorage.setItem('bios101_submittedAt', new Date().toISOString());
+        alert('Response submitted and downloaded as "bios101_response.txt". The submission time has been recorded locally.');
+    }
+
+    submitBtn.addEventListener('click', validateAndSubmit);
+    // --- END NEW FEATURE: Submit Button Logic ---
+
+    // --- ORIGINAL: Recording logic (MediaRecorder) ---
+    let mediaRecorder;
+    let recordedChunks = [];
+    let recordStartTime = null;
+    let currentStream = null; // Store the current MediaStream
+    const recordBtn = document.getElementById('recordBtn');
+    const stopRecBtn = document.getElementById('stopRecBtn');
+    const timerEl = document.getElementById('timer');
+    const meterBar = document.getElementById('meterBar');
+    const playerArea = document.getElementById('playerArea');
+    const audioPlayer = document.getElementById('audioPlayer');
+    const downloadAudioBtn = document.getElementById('downloadAudio');
+    const reRecordBtn = document.getElementById('reRecord');
+    const exportArea = document.getElementById('exportArea');
+    const downloadResponseLink = document.getElementById('downloadResponseLink');
+    const downloadAudioLink = document.getElementById('downloadAudioLink');
+    const packageBtn = document.getElementById('packageBtn');
+    const packageLink = document.getElementById('packageLink');
+
+    const MAX_SECONDS = 120;
+    let timerInterval = null;
+    let audioBlob = null; 
+
+    // --- NEW FEATURE: Video Recording Toggle & State ---
+    const toggleAudioBtn = document.getElementById('toggleAudio');
+    const toggleVideoBtn = document.getElementById('toggleVideo');
+    const videoPreview = document.getElementById('preview');
+    const privacyNote = document.getElementById('privacyNote');
+    let isVideoMode = false;
+
+    toggleAudioBtn.addEventListener('click', () => {
+        isVideoMode = false;
+        toggleAudioBtn.classList.add('active');
+        toggleVideoBtn.classList.remove('active');
+        videoPreview.style.display = 'none';
+        audioPlayer.style.display = 'block';
+        privacyNote.textContent = 'Recording requires microphone permissions and a secure context (HTTPS or localhost).';
+        // Reset player state if we switch modes
+        if (mediaRecorder && mediaRecorder.state !== 'inactive') stopRecording(true); 
+        else resetPlayerDisplay();
+    });
+
+    toggleVideoBtn.addEventListener('click', () => {
+        isVideoMode = true;
+        toggleAudioBtn.classList.remove('active');
+        toggleVideoBtn.classList.add('active');
+        videoPreview.style.display = 'block';
+        audioPlayer.style.display = 'none'; // Only show video or audio element
+        privacyNote.textContent = 'Recording requires camera/mic permissions and a secure context (HTTPS or localhost).';
+        // Reset player state if we switch modes
+        if (mediaRecorder && mediaRecorder.state !== 'inactive') stopRecording(true);
+        else resetPlayerDisplay();
+    });
+    
+    function resetPlayerDisplay() {
+         // This runs after a successful stop/switch.
+        audioPlayer.src = '';
+        videoPreview.src = '';
+        videoPreview.controls = false;
+        videoPreview.srcObject = null;
+        playerArea.style.display = 'none';
+    }
+    // --- END NEW FEATURE: Video Recording Toggle & State ---
+
+    function updateTimer() {
+      if (!recordStartTime) return;
+      const elapsed = Math.floor((Date.now() - recordStartTime)/1000);
+      const sec = Math.min(elapsed, MAX_SECONDS);
+      const mm = String(Math.floor(sec / 60)).padStart(2,'0');
+      const ss = String(sec % 60).padStart(2,'0');
+      timerEl.textContent = mm + ':' + ss;
+      meterBar.style.width = (sec / MAX_SECONDS * 100) + '%';
+      if (elapsed >= MAX_SECONDS) stopRecording();
+    }
+    
+    // Pass a boolean to stopRecording to prevent playback and UI changes during mode switch
+    function stopRecording(isSwitchingMode = false) {
+      if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop();
+      }
+      // Stop the stream tracks and clean up currentStream
+      if (currentStream) {
+          currentStream.getTracks().forEach(track => track.stop());
+          currentStream = null;
+      }
+      
+      if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+      recordStartTime = null;
+      timerEl.textContent = '00:00';
+      meterBar.style.width = '0%';
+      recordBtn.disabled = false;
+      stopRecBtn.disabled = true;
+      recordBtn.textContent = '● Start Recording';
+      
+      // Only reset player display if we are not switching modes (to avoid flicker)
+      if (!isSwitchingMode) {
+          if (isVideoMode) {
+              videoPreview.srcObject = null;
+              videoPreview.controls = false; // Hide controls on stop until ready for playback
+          }
+      } else {
+           // If switching, we reset the visual source immediately
+           videoPreview.srcObject = null;
+      }
+    }
+
+
+    async function startRecording() {
+      // require a plucked question
+      if (!pluckedInput.value.trim()) {
+        if (!confirm('No plucked question set. Are you sure you want to record your answer?')) return;
+      }
+      try {
+        // --- MODIFIED: Media constraints based on mode ---
+        const constraints = isVideoMode ? 
+            { audio: true, video: { width: 1280, height: 720 } } :
+            { audio: true };
+
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        currentStream = stream; // Store the stream for later cleanup
+        
+        // Setup video preview if in video mode
+        if (isVideoMode) {
+            videoPreview.srcObject = stream;
+            videoPreview.play();
+            videoPreview.controls = false; // Hide controls while recording
+        }
+
+        mediaRecorder = new MediaRecorder(stream);
+        recordedChunks = [];
+        mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) recordedChunks.push(e.data); };
+        mediaRecorder.onstop = () => {
+          // Get correct mime type, default to audio/webm
+          const mimeType = recordedChunks[0]?.type || (isVideoMode ? 'video/webm' : 'audio/webm');
+          audioBlob = new Blob(recordedChunks, { type: mimeType }); // Keeping name audioBlob for compatibility
+
+          // Stream cleanup moved to stopRecording function
+
+          const url = URL.createObjectURL(audioBlob);
+          
+          // Show/hide correct player
+          if (isVideoMode) {
+              audioPlayer.style.display = 'none';
+              videoPreview.style.display = 'block';
+              videoPreview.controls = true; // Add controls to the video element for playback
+              videoPreview.src = url;
+              videoPreview.loop = true; // Loop the video playback
+              videoPreview.srcObject = null; // Clear live stream object
+          } else {
+              audioPlayer.style.display = 'block';
+              videoPreview.style.display = 'none';
+              audioPlayer.src = url;
+          }
+          
+          playerArea.style.display = 'block';
+          downloadAudioBtn.disabled = false;
+          downloadAudioLink.href = url;
+          downloadAudioLink.download = `response-${isVideoMode ? 'video' : 'audio'}.webm`;
+          downloadAudioLink.textContent = `Download ${isVideoMode ? 'video' : 'audio'} (if recorded)`; // Update download link text
+
+          // reveal export controls
+          exportArea.style.display = 'block';
+          // create package link if response exists
+          createResponseFileLink();
+        };
+        mediaRecorder.start();
+        recordStartTime = Date.now();
+        timerInterval = setInterval(updateTimer, 200);
+        recordBtn.disabled = true;
+        stopRecBtn.disabled = false;
+        recordBtn.textContent = '● Recording...';
+      } catch (err) {
+        console.error(err);
+        // Clean up the stream on error
+        if (currentStream) {
+           currentStream.getTracks().forEach(track => track.stop());
+           currentStream = null;
+        }
+        stopRecording(true); // Call stop but suppress player reset
+        
+        // Detailed error message
+        if (err.name === "NotAllowedError" || err.name === "PermissionDeniedError") {
+            alert('Unable to start recording: Permission denied. Please check your browser settings to allow camera and microphone access.');
+        } else if (err.name === "NotReadableError" || err.name === "NotFoundError") {
+             alert('Unable to start recording: Camera or microphone not found or in use by another application.');
+        } else {
+             alert('Unable to start recording. Make sure microphone/camera access is allowed and you are on a secure origin (HTTPS or localhost).');
+        }
+      }
+    }
+
+    // Event listeners attached below original code block
+    recordBtn.addEventListener('click', startRecording);
+    stopRecBtn.addEventListener('click', stopRecording);
+    reRecordBtn.addEventListener('click', () => {
+      if (!confirm('This will discard the previous recording and let you record again. Proceed?')) return;
+      audioBlob = null;
+      audioPlayer.src = '';
+      videoPreview.src = '';
+      videoPreview.controls = false;
+      playerArea.style.display = 'none';
+      exportArea.style.display = 'block'; // Keep export controls visible if typed response is ready
+      startRecording();
+    });
+    downloadAudioBtn.addEventListener('click', () => {
+      if (!audioBlob) {
+        alert('No recording available to download.');
+        return;
+      }
+      const url = URL.createObjectURL(audioBlob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `response-${isVideoMode ? 'video' : 'audio'}.webm`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    });
+    // --- ORIGINAL: Export typed response ---
+    function createResponseFileLink() {
+      const txt = responseTA.value.trim();
+      const blob = new Blob([txt || ''], {type:'text/plain'});
+      const url = URL.createObjectURL(blob);
+      downloadResponseLink.href = url;
+      downloadResponseLink.download = 'response.txt';
+      downloadResponseLink.style.display = 'inline-block';
+      // audio link maybe handled above
+      // Prepare package button to combine both (client-side zip-like)
+      packageBtn.disabled = false;
+    }
+
+    document.getElementById('exportText').addEventListener('click', () => {
+      createResponseFileLink();
+      alert('A download link for your typed response is now available below. Use the "Prepare package" button to combine response + audio as a single downloadable file.');
+      exportArea.style.display = 'block';
+    });
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      if (!confirm('Clear your typed response? This cannot be undone.')) return;
+      responseTA.value = '';
+      pluckedInput.value = '';
+    });
+    // --- ORIGINAL: Package (simple zip-like .tar approach via blobs) ---
+    // We'll build a simple zip-style package by creating a Blob containing both files with minimal metadata.
+    // Note: Not a true .zip file; many LMSes accept a single .tgz or .webbundle;
+    // here we provide a small .zip-like packaging via JSZip would be nicer, but we avoid dependencies.
+    // Instead we create a tiny "multipart" .zip-like blob: we'll create a .txt and .webm packaged into a single .json manifest blob the instructor can unzip manually.
+    packageBtn.addEventListener('click', async () => {
+      const responseText = responseTA.value.trim();
+      if (!responseText) {
+        if (!confirm('You have not typed a response. Continue packaging anyway?')) return;
+      }
+      // Prepare parts
+      const files = [];
+      files.push({ name: 'response.txt', content: responseText });
+      if (audioBlob) {
+        const arr = await audioBlob.arrayBuffer();
+       
+        // --- MODIFIED: Package filename for video mode ---
+        const audioVideoFilename = `response-${isVideoMode ? 'video' : 'audio'}.webm`;
+        files.push({ name: audioVideoFilename, content: new Uint8Array(arr) });
+        // --- END MODIFIED ---
+
+      }
+      // Build package as a JSON container with base64 audio if present, to make a single downloadable file.
+      const packageObj = {
+        metadata: {
+          createdAt: new Date().toISOString(),
+          pluckedQuestion: pluckedInput.value || null
+        },
+        files: files.map(f => {
+  
+          if (typeof f.content === 'string') return { name: f.name, type: 'text', data: btoa(unescape(encodeURIComponent(f.content))) };
+          else return { name: f.name, type: 'binary', data: btoa(String.fromCharCode.apply(null, f.content)) };
+        })
+      };
+      const packageStr = JSON.stringify(packageObj);
+      const blob = new Blob([packageStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      packageLink.href = url;
+      packageLink.style.display = 'inline-block';
+      packageLink.download = 'submission-package.json';
+      packageLink.textContent = '⬇️ Download package';
+      // allow immediate click
+      alert('Package prepared. Click the new "Download package" link.');
+    });
+    // --- ORIGINAL: Create response file link on input change ---
+    responseTA.addEventListener('input', () => {
+      // hide pluck button state reset
+      document.getElementById('pluckBtn').textContent = '🔎 Pluck Question';
+      exportArea.style.display = 'none';
+      pasteAttemptCount = 0; // Reset paste counter on legitimate input
+    });
+    // --- ORIGINAL: Accessibility / final touches ---
+    // When the page is closed, revoke object URLs created (none to track exhaustively).
+    window.addEventListener('beforeunload', () => {
+      // Clean up the stream if recording is still active when the user tries to navigate away
+      if (currentStream) {
+           currentStream.getTracks().forEach(track => track.stop());
+      }
+    });
+    // Optional: small UX: show example placeholder question on load
+    pluckedInput.placeholder = 'Click "Pluck Question" to create an oral-check question from your response (then edit if needed).';
+    </script>
+</body>
+</html>
